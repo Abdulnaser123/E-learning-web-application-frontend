@@ -3,25 +3,26 @@ import {Link} from 'react-router-dom';
 import Sidebar from './Sidebar';
 import {useEffect, useState} from 'react';
 import axios from 'axios';
+import {useParams} from 'react-router-dom';
 import {
   PencilSquare,
   Trash,
   PlusSquare,
-  BookmarkPlus,
-  Briefcase,
-  Person,
+  Binoculars,
 } from 'react-bootstrap-icons';
 const baseURL = 'http://127.0.0.1:8000/api';
-function MyCourses() {
-  const [courseData, setCourseData] = useState([]);
+function EnrolledStudents() {
+  const [studentData, setStudentData] = useState([]);
   const teacherId = localStorage.getItem('teacherId');
-  console.log(teacherId);
+  //   console.log(teacherId);
+  const {course_id} = useParams();
   useEffect(() => {
-    axios.get(baseURL + '/teacher-courses/' + teacherId).then((res) => {
-      setCourseData(res.data);
+    axios.get(baseURL + '/fetch-enrolled-students/' + course_id).then((res) => {
+      setStudentData(res.data);
       // console.log(res.data);
     });
   }, []);
+  console.log(studentData);
   return (
     <div className="container mt-4">
       <div className="row">
@@ -31,51 +32,48 @@ function MyCourses() {
         <section className="col-md-9">
           {' '}
           <div className="card">
-            <h4 className="card-header">My Courses</h4>
+            <h4 className="card-header">Enrolled Students</h4>
             <h5 className="card-body">
               <table className="table table-bordered">
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Image</th>
-                    <th>Total Enrollment</th>
+                    <th>Email</th>
+                    <th>Username</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {courseData.map((course, index) => {
+                  {studentData.map((student, index) => {
                     return (
                       <>
                         <tr>
-                          <td>
-                            <Link
-                              to={'/all-chapters/' + course.id}
-                              className="text-decoration-none"
-                            >
-                              {' '}
-                              {course.title}
-                            </Link>
-                          </td>
-                          <td>
+                          <td>{student.student.full_name}</td>
+                          {/* <td>
                             <img
-                              src={course.featured_img}
-                              alt={course.title}
+                              src={student.featured_img}
+                              alt={student.title}
                               width={80}
                               className="rounded"
                             />
-                          </td>
+                          </td> */}
 
-                          <td className="mt-1">
-                            <Link to={'/enrolled-students/' + course.id}>
-                              <button className="btn btn-info btn-sm ">
-                                <Person size={20} />
-                                <span className="text-light bg-danger p-1 rounded-circle">
-                                  {course.total_enrolled_students}
-                                </span>
-                              </button>
-                            </Link>
+                          <td>
+                            {/* <Link to="/"> */}
+                            {student.student.email}
+                            {/* </Link> */}
                           </td>
                           <td>
+                            {/* <Link to="/"> */}
+                            {student.student.username}
+                            {/* </Link> */}
+                          </td>
+                          <Link to={'/add-chapter/' + student.id}>
+                            <button className="btn btn-info btn-sm ms-2 ">
+                              view
+                            </button>
+                          </Link>
+                          {/* <td>
                             <Link to={'/edit-course/' + course.id}>
                               <button className="btn btn-info btn-sm ">
                                 <PencilSquare size={20} />
@@ -86,20 +84,10 @@ function MyCourses() {
                                 <PlusSquare size={20} />
                               </button>
                             </Link>
-                            <Link to={'/assign-quiz/' + course.id}>
-                              <button className="btn btn-warning  btn-sm ms-2">
-                                <BookmarkPlus size={20} />
-                              </button>
-                            </Link>
-                            <Link to={'/study-materials/' + course.id}>
-                              <button className="btn btn-primary  btn-sm ms-2">
-                                <Briefcase size={20} />
-                              </button>
-                            </Link>
                             <button className="btn btn-danger ms-2 btn-sm">
                               <Trash size={20} />
                             </button>
-                          </td>
+                          </td> */}
                         </tr>
                       </>
                     );
@@ -114,4 +102,4 @@ function MyCourses() {
   );
 }
 
-export default MyCourses;
+export default EnrolledStudents;

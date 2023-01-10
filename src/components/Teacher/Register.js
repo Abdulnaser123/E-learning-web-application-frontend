@@ -10,12 +10,6 @@ import {
 import {useState, useEffect} from 'react';
 const baseUrl = 'http://127.0.0.1:8000/api/teacher/';
 function Register() {
-  // full_name = models.CharField((max_length = 100));
-  // email = models.CharField((max_length = 100));
-  // password = models.CharField((max_length = 100));
-  // qualification = models.CharField((max_length = 200));
-  // mobile_no = models.CharField((max_length = 20));
-  // address = models.TextField();
   const [teacherData, setTeacherData] = useState({
     full_name: '',
     email: '',
@@ -24,6 +18,7 @@ function Register() {
     mobile_no: '',
     skills: '',
     status: '',
+    otp_digit: '',
   });
   const handleChange = (e) => {
     setTeacherData({...teacherData, [e.target.name]: e.target.value});
@@ -36,19 +31,12 @@ function Register() {
     teacherFormData.append('qualification', teacherData.qualification);
     teacherFormData.append('mobile_no', teacherData.mobile_no);
     teacherFormData.append('skills', teacherData.skills);
+    teacherFormData.append('otp_digit', 123321);
 
     try {
       axios.post(baseUrl, teacherFormData).then((response) => {
+        window.location.href = '/verify-teacher/' + response.data.id;
         console.log(response.data);
-        setTeacherData({
-          full_name: '',
-          email: '',
-          password: '',
-          qualification: '',
-          mobile_no: '',
-          skills: '',
-          status: 'success',
-        });
       });
     } catch (error) {
       setTeacherData({
@@ -81,7 +69,7 @@ function Register() {
                 <div className="row justify-content-center">
                   <div className="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
                     <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">
-                      Sign up
+                      Teacher Sign up
                     </p>
                     {teacherData.status === 'success' && (
                       <p className="text-success">

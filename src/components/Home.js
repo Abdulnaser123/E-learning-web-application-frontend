@@ -1,7 +1,38 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-
+import {useEffect, useState} from 'react';
+import axios from 'axios';
+const baseURL = 'http://127.0.0.1:8000/api/course/';
 function Home() {
+  const [courseData, setCourseData] = useState([]);
+  const [popularCourses, setPopularCourses] = useState([]);
+  const [popularTeachers, setPopularTeacher] = useState([]);
+  const teacherId = localStorage.getItem('teacherId');
+  useEffect(() => {
+    axios.get(baseURL).then((res) => {
+      setCourseData(res.data);
+      console.log(res.data);
+    });
+    try {
+      axios
+        .get('http://127.0.0.1:8000/api' + '/popular-courses/?popular=1/')
+        .then((res) => {
+          setPopularCourses(res.data);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+    try {
+      axios
+        .get('http://127.0.0.1:8000/api' + '/popular-teachers/?popular=1/')
+        .then((res) => {
+          setPopularTeacher(res.data);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+  console.log(courseData);
   return (
     <>
       <div className="container mt-4">
@@ -12,93 +43,49 @@ function Home() {
           </a>
         </div>
         <div className="row mb-4">
-          <div className="col-md-3">
-            <div className="card">
-              <Link to="/detail/1">
-                {' '}
-                <img
-                  src="https://www.ptuk.edu.ps/projects/edu4all/wp-content/uploads/2021/02/cropped-Edu-4-all-Final-Jan-2021-01-1.png"
-                  className="card-img-top rounded-circle"
-                  alt="..."
-                />
-              </Link>
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">
-                  <Link to="/detail/1">Course title</Link>
-                </h5>
-                <p className="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <a href="#1" className="btn btn-primary">
-                  Go somewhere
-                </a>
-                <div className="card-footer">
-                  <div className="title">
-                    <span>Rating: 4.6/5</span>
-                    <span className="float-end">Views: 5451</span>
+          {courseData &&
+            courseData.map((data, index) => {
+              return (
+                index < 4 && (
+                  <div className="col-md-3">
+                    <div className="card">
+                      <Link to={'/detail/' + data.id}>
+                        {' '}
+                        <img
+                          src={data.featured_img}
+                          className="card-img-top w-40"
+                          alt="..."
+                        />
+                      </Link>
+                      <div className="card-body d-flex flex-column">
+                        <h5 className="card-title">
+                          <Link
+                            className="text-decoration-none text-light bg-dark p-1 rounded"
+                            to={'/detail/' + data.id}
+                          >
+                            {data.title}
+                          </Link>
+                        </h5>
+                        <p className="card-text">{data.description}</p>
+                        <Link to={'/detail/' + data.id}>
+                          <a href="#1" className="btn btn-primary">
+                            Course Detail
+                          </a>
+                        </Link>
+                        <div className="card-footer">
+                          <div className="title">
+                            <span>
+                              Rating: {data.course_rating.rating__avg} / 5
+                            </span>
+                            <span className="float-end">Views: 5451</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card">
-              <img
-                src="https://www.ptuk.edu.ps/projects/edu4all/wp-content/uploads/2021/02/cropped-Edu-4-all-Final-Jan-2021-01-1.png"
-                className="card-img-top rounded-circle"
-                alt="..."
-              />
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <a href="#1" className="btn btn-primary">
-                  Go somewhere
-                </a>
-              </div>
-            </div>
-          </div>{' '}
-          <div className="col-md-3">
-            <div className="card">
-              <img
-                src="https://www.ptuk.edu.ps/projects/edu4all/wp-content/uploads/2021/02/cropped-Edu-4-all-Final-Jan-2021-01-1.png"
-                className="card-img-top rounded-circle"
-                alt="..."
-              />
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <a href="#1" className="btn btn-primary">
-                  Go somewhere
-                </a>
-              </div>
-            </div>
-          </div>{' '}
-          <div className="col-md-3">
-            <div className="card">
-              <img
-                src="https://www.ptuk.edu.ps/projects/edu4all/wp-content/uploads/2021/02/cropped-Edu-4-all-Final-Jan-2021-01-1.png"
-                className="card-img-top rounded-circle"
-                alt="..."
-              />
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <a href="#1" className="btn btn-primary">
-                  Go somewhere
-                </a>
-              </div>
-            </div>
-          </div>
+                )
+              );
+            })}
         </div>
       </div>
 
@@ -113,82 +100,40 @@ function Home() {
         </div>
 
         <div className="row mb-4">
-          <div className="col-md-3">
-            <div className="card">
-              <img
-                src="https://www.ptuk.edu.ps/projects/edu4all/wp-content/uploads/2021/02/cropped-Edu-4-all-Final-Jan-2021-01-1.png"
-                className="card-img-top rounded-circle"
-                alt="..."
-              />
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <a href="#1" className="btn btn-primary">
-                  Go somewhere
-                </a>
+          {popularCourses &&
+            popularCourses.map((popularCourse, index) => (
+              <div className="col-md-3">
+                <div className="card">
+                  <Link to={'/detail/' + popularCourse.course.id}>
+                    {' '}
+                    <img
+                      src={popularCourse.course.featured_img}
+                      className="card-img-top rounded"
+                      alt="course_Image"
+                    />
+                  </Link>
+
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title">
+                      <Link
+                        className="text-decoration-none text-light bg-dark p-1 rounded"
+                        to={'/detail/' + popularCourse.course.id}
+                      >
+                        {popularCourse.course.title}
+                      </Link>
+                    </h5>
+                    <p className="card-text">
+                      {popularCourse.course.description}
+                    </p>
+                    <Link to={'/detail/' + popularCourse.course.id}>
+                      <a href="#1" className="btn btn-primary">
+                        Course Detail
+                      </a>
+                    </Link>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card">
-              <img
-                src="https://www.ptuk.edu.ps/projects/edu4all/wp-content/uploads/2021/02/cropped-Edu-4-all-Final-Jan-2021-01-1.png"
-                className="card-img-top rounded-circle"
-                alt="..."
-              />
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <a href="#1" className="btn btn-primary">
-                  Go somewhere
-                </a>
-              </div>
-            </div>
-          </div>{' '}
-          <div className="col-md-3">
-            <div className="card">
-              <img
-                src="https://www.ptuk.edu.ps/projects/edu4all/wp-content/uploads/2021/02/cropped-Edu-4-all-Final-Jan-2021-01-1.png"
-                className="card-img-top rounded-circle"
-                alt="..."
-              />
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <a href="#1" className="btn btn-primary">
-                  Go somewhere
-                </a>
-              </div>
-            </div>
-          </div>{' '}
-          <div className="col-md-3">
-            <div className="card">
-              <img
-                src="https://www.ptuk.edu.ps/projects/edu4all/wp-content/uploads/2021/02/cropped-Edu-4-all-Final-Jan-2021-01-1.png"
-                className="card-img-top rounded-circle"
-                alt="..."
-              />
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <a href="#1" className="btn btn-primary">
-                  Go somewhere
-                </a>
-              </div>
-            </div>
-          </div>
+            ))}
         </div>
       </div>
       {/* popular 
@@ -202,82 +147,31 @@ function Home() {
         </div>
 
         <div className="row mb-4">
-          <div className="col-md-3">
-            <div className="card">
-              <img
-                src="https://www.ptuk.edu.ps/projects/edu4all/wp-content/uploads/2021/02/cropped-Edu-4-all-Final-Jan-2021-01-1.png"
-                className="card-img-top rounded-circle"
-                alt="..."
-              />
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <a href="#1" className="btn btn-primary">
-                  Go somewhere
-                </a>
+          {popularTeachers &&
+            popularTeachers.map((popularTeacher, index) => (
+              <div className="col-md-3 ">
+                <div className="card">
+                  <img
+                    src={popularTeacher.profile_img}
+                    className="card-img-top rounded "
+                    alt="teacher_image"
+                  />
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title text-primary">
+                      {popularTeacher.full_name}
+                    </h5>
+                    <p className="card-text ">
+                      total courses: {popularTeacher.total_courses}
+                    </p>
+                    <Link to={'/teacher-detail/' + teacherId}>
+                      <a href="#1" className="btn btn-primary">
+                        Teacher Detail
+                      </a>
+                    </Link>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card">
-              <img
-                src="https://www.ptuk.edu.ps/projects/edu4all/wp-content/uploads/2021/02/cropped-Edu-4-all-Final-Jan-2021-01-1.png"
-                className="card-img-top rounded-circle"
-                alt="..."
-              />
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <a href="#1" className="btn btn-primary">
-                  Go somewhere
-                </a>
-              </div>
-            </div>
-          </div>{' '}
-          <div className="col-md-3">
-            <div className="card">
-              <img
-                src="https://www.ptuk.edu.ps/projects/edu4all/wp-content/uploads/2021/02/cropped-Edu-4-all-Final-Jan-2021-01-1.png"
-                className="card-img-top rounded-circle"
-                alt="..."
-              />
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <a href="#1" className="btn btn-primary">
-                  Go somewhere
-                </a>
-              </div>
-            </div>
-          </div>{' '}
-          <div className="col-md-3">
-            <div className="card">
-              <img
-                src="https://www.ptuk.edu.ps/projects/edu4all/wp-content/uploads/2021/02/cropped-Edu-4-all-Final-Jan-2021-01-1.png"
-                className="card-img-top rounded-circle"
-                alt="..."
-              />
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <a href="#1" className="btn btn-primary">
-                  Go somewhere
-                </a>
-              </div>
-            </div>
-          </div>
+            ))}
         </div>
       </div>
     </>

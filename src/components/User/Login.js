@@ -1,7 +1,50 @@
+import {EmojiFrown} from 'react-bootstrap-icons';
 import React from 'react';
 import {Facebook, Google, Linkedin} from 'react-bootstrap-icons';
+import axios from 'axios';
+import {useState, useEffect} from 'react';
+import {Link} from 'react-router-dom';
+const baseURL = 'http://127.0.0.1:8000/api/';
 
 function Login() {
+  const [errorMsg, setErrMsg] = useState('');
+  useEffect(() => {
+    document.title = 'Student Login';
+  });
+  const [studentLoginData, setStudentLoginData] = useState({
+    email: '',
+    password: '',
+  });
+  const handleChange = (e) => {
+    setStudentLoginData({...studentLoginData, [e.target.name]: e.target.value});
+  };
+  const submitForm = () => {
+    const studentLoginForm = new FormData();
+    studentLoginForm.append('email', studentLoginData.email);
+    studentLoginForm.append('password', studentLoginData.password);
+    try {
+      axios.post(baseURL + 'student-login', studentLoginForm).then((res) => {
+        if (res.data.bool === true) {
+          localStorage.setItem('studentLoginStatus', true);
+          localStorage.setItem('studentId', res.data.student_id);
+
+          window.location.href = '/';
+
+          // console.log(res.data);
+        } else {
+          setErrMsg('Invalid Email Or Password ');
+        }
+        // console.log(res.data);
+      });
+    } catch (error) {
+      console.error('error' + error);
+    }
+  };
+
+  if (localStorage.getItem('studentLoginStatus') === 'true') {
+    console.log(localStorage.getItem('studentLoginStatus'));
+    window.location.href = '/';
+  }
   return (
     <section className="vh-100 mt-4">
       <div className="container-fluid h-custom">
@@ -16,88 +59,104 @@ function Login() {
             />
           </div>
           <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-            <form>
-              <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                <p className="lead fw-normal mb-0 me-3">Sign in with</p>
-                <button
-                  type="button"
-                  className="btn btn-primary btn-floating mx-1"
-                >
-                  <Facebook size={24} />
-                </button>
+            <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+              <p className="lead fw-normal mb-0 me-3">Sign in with</p>
+              <button
+                type="button"
+                className="btn btn-primary btn-floating mx-1"
+              >
+                <Facebook size={24} />
+              </button>
 
-                <button
-                  type="button"
-                  className="btn btn-primary btn-floating mx-1"
-                >
-                  <Google size={24} />
-                </button>
+              <button
+                type="button"
+                className="btn btn-primary btn-floating mx-1"
+              >
+                <Google size={24} />
+              </button>
 
-                <button
-                  type="button"
-                  className="btn btn-primary btn-floating mx-1"
-                >
-                  <Linkedin size={24} />
-                </button>
-              </div>
+              <button
+                type="button"
+                className="btn btn-primary btn-floating mx-1"
+              >
+                <Linkedin size={24} />
+              </button>
+            </div>
 
-              <div className="divider d-flex align-items-center my-4">
-                <p className="text-center fw-bold mx-3 mb-0">Or</p>
-              </div>
+            <div className="divider d-flex align-items-center my-4">
+              <p className="text-center fw-bold mx-3 mb-0">Or</p>
+            </div>
+            {errorMsg && (
+              <p className="p-3 mb-2 bg-dark text-white">
+                {errorMsg}
+                <EmojiFrown size={24} />
+              </p>
+            )}
 
-              <div className="form-outline mb-4">
+            <div className="form-outline mb-4">
+              <input
+                type="email"
+                id="email"
+                className="form-control form-control-lg"
+                placeholder="Enter a valid email address"
+                value={studentLoginData.email}
+                onChange={handleChange}
+                name="email"
+              />
+              <label className="form-label" for="email">
+                Email address
+              </label>
+            </div>
+
+            <div className="form-outline mb-3">
+              <input
+                type="password"
+                id="password"
+                className="form-control form-control-lg"
+                placeholder="Enter password"
+                value={studentLoginData.password}
+                onChange={handleChange}
+                name="password"
+              />
+              <label className="form-label" for="password">
+                Password
+              </label>
+            </div>
+
+            <div className="d-flex justify-content-between align-items-center">
+              <div className="form-check mb-0">
                 <input
-                  type="email"
-                  id="form3Example3"
-                  className="form-control form-control-lg"
-                  placeholder="Enter a valid email address"
+                  className="form-check-input me-2"
+                  type="checkbox"
+                  value=""
+                  id="form2Example3"
                 />
-                <label className="form-label" for="form3Example3">
-                  Email address
+                <label className="form-check-label" for="form2Example3">
+                  Remember me
                 </label>
               </div>
+              <a href="#!" className="text-body">
+                Forgot password?
+              </a>
+            </div>
 
-              <div className="form-outline mb-3">
-                <input
-                  type="password"
-                  id="form3Example4"
-                  className="form-control form-control-lg"
-                  placeholder="Enter password"
-                />
-                <label className="form-label" for="form3Example4">
-                  Password
-                </label>
-              </div>
-
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="form-check mb-0">
-                  <input
-                    className="form-check-input me-2"
-                    type="checkbox"
-                    value=""
-                    id="form2Example3"
-                  />
-                  <label className="form-check-label" for="form2Example3">
-                    Remember me
-                  </label>
-                </div>
-                <a href="#!" className="text-body">
-                  Forgot password?
-                </a>
-              </div>
-
-              <div className="text-center text-lg-start mt-4 pt-2">
-                <button type="button" className="btn btn-primary btn-lg">
-                  Login
-                </button>
-                <p className="small fw-bold mt-2 pt-1 mb-0">
-                  Don't have an account?{' '}
+            <div className="text-center text-lg-start mt-4 pt-2">
+              <button
+                type="submit"
+                onClick={submitForm}
+                className="btn btn-primary btn-lg"
+              >
+                Login
+              </button>
+              <p className="small fw-bold mt-2 pt-1 mb-0">
+                Don't have an account?{' '}
+                <Link to={'/user-register'}>
                   <a href="#!" className="link-danger">
                     Register
                   </a>
-                </p>
-              </div>
-            </form>
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -9,11 +9,10 @@ import Swal from 'sweetalert2';
 const baseURL = 'http://127.0.0.1:8000/api';
 function Dashboard() {
   const [DashboardData, setDashboardData] = useState([]);
-  const student_id = localStorage.getItem('studentId');
-  console.log(DashboardData);
+  const teacher_id = localStorage.getItem('teacherId');
   useEffect(() => {
     try {
-      axios.get(baseURL + '/student/dashboard/' + student_id).then((res) => {
+      axios.get(baseURL + '/teacher/dashboard/' + teacher_id).then((res) => {
         setDashboardData(res.data);
         // console.log(res.data);
       });
@@ -34,10 +33,10 @@ function Dashboard() {
                 class="card text-white bg-primary mb-3 ms-4"
                 style={{maxWidth: '18rem'}}
               >
-                <div class="card-header">Enrolled Courses</div>
+                <div class="card-header">Total Courses</div>
                 <div class="card-body">
                   <h5 class="card-title text-center">
-                    {DashboardData.enrolled_courses} course(s)
+                    {DashboardData.total_courses} course(s)
                   </h5>
                 </div>
               </div>
@@ -45,10 +44,10 @@ function Dashboard() {
                 class="card text-white bg-secondary mb-3 ms-4"
                 style={{maxWidth: '18rem'}}
               >
-                <div class="card-header">Pending Assignments</div>
+                <div class="card-header">Total Students</div>
                 <div class="card-body">
                   <h5 class="card-title text-center">
-                    {DashboardData.pending_assignments} assignment(s)
+                    {DashboardData.total_students} student(s)
                   </h5>
                 </div>
               </div>
@@ -56,10 +55,10 @@ function Dashboard() {
                 class="card text-white bg-success mb-3 ms-4"
                 style={{maxWidth: '18rem'}}
               >
-                <div class="card-header">Complete Assignments</div>
+                <div class="card-header">Total Chapters</div>
                 <div class="card-body">
                   <h5 class="card-title text-center">
-                    {DashboardData.complete_assignment} assignment(s){' '}
+                    {DashboardData.total_chapters} chapter(s){' '}
                   </h5>
                 </div>
               </div>

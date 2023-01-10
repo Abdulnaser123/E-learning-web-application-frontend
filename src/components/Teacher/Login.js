@@ -1,10 +1,13 @@
+import {EmojiFrown} from 'react-bootstrap-icons';
 import React from 'react';
 import {Facebook, Google, Linkedin} from 'react-bootstrap-icons';
 import axios from 'axios';
 import {useState, useEffect} from 'react';
+import {Link} from 'react-router-dom';
 const baseURL = 'http://127.0.0.1:8000/api/';
 
 function Login() {
+  const [errorMsg, setErrMsg] = useState('');
   useEffect(() => {
     document.title = 'Teacher Login';
   });
@@ -19,12 +22,23 @@ function Login() {
     const teacherLoginForm = new FormData();
     teacherLoginForm.append('email', teacherLoginData.email);
     teacherLoginForm.append('password', teacherLoginData.password);
-    axios.post(baseURL + 'teacherLogin', teacherLoginForm).then((res) => {
-      if (res.data.bool === true) {
-        localStorage.setItem('teacherLoginStatus', true);
+    try {
+      axios.post(baseURL + 'teacher-login', teacherLoginForm).then((res) => {
+        if (res.data.bool === true) {
+          localStorage.setItem('teacherLoginStatus', true);
+          localStorage.setItem('teacherId', res.data.teacher_id);
+
+          window.location.href = '/teacher-dashboard';
+
+          // console.log(res.data);
+        } else {
+          setErrMsg(res.data.msg);
+        }
         // console.log(res.data);
-      }
-    });
+      });
+    } catch (error) {
+      console.error('error' + error);
+    }
   };
 
   if (localStorage.getItem('teacherLoginStatus') === 'true') {
@@ -72,6 +86,12 @@ function Login() {
             <div className="divider d-flex align-items-center my-4">
               <p className="text-center fw-bold mx-3 mb-0">Or</p>
             </div>
+            {errorMsg && (
+              <p className="p-3 mb-2 bg-dark text-white">
+                {errorMsg}
+                <EmojiFrown size={24} />
+              </p>
+            )}
 
             <div className="form-outline mb-4">
               <input
@@ -130,9 +150,11 @@ function Login() {
               </button>
               <p className="small fw-bold mt-2 pt-1 mb-0">
                 Don't have an account?{' '}
-                <a href="#!" className="link-danger">
-                  Register
-                </a>
+                <Link to={'/teacher-register'}>
+                  <a href="#!" className="link-danger">
+                    Register
+                  </a>
+                </Link>
               </p>
             </div>
           </div>

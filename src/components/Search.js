@@ -1,12 +1,13 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import axios from 'axios';
-const baseURL = 'http://127.0.0.1:8000/api/course/';
+const baseURL = 'http://127.0.0.1:8000/api/search-courses/';
 function AllCourses() {
+  const {searchString} = useParams();
   const [courseData, setCourseData] = useState([]);
   useEffect(() => {
-    axios.get(baseURL).then((res) => {
+    axios.get(baseURL + searchString).then((res) => {
       setCourseData(res.data);
 
       // console.log('data is ', res.data);
@@ -15,10 +16,10 @@ function AllCourses() {
   return (
     <div className="container mt-4">
       <div className="row border-bottom border-primary pb-1 mb-1">
-        <h3 className="col">Latest Courses</h3>
-        <a className="col text-uppercase fw-bold" href="#1">
-          <Link to={'/'}>Go Back</Link>
-        </a>
+        <h3 className="col">
+          Search for {<span className="text-primary">{searchString} </span>}
+          courses
+        </h3>
       </div>
       <div className="row mb-4">
         {courseData &&

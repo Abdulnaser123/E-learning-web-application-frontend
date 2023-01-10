@@ -23,7 +23,36 @@ import AllCourses from './AllCourses';
 import PopularCourses from './PopularCourses';
 import PopularTeachers from './PopularTeachers';
 import CategoryCourses from './CategoryCourses';
+import AddCourse from './Teacher/AddCourse';
 import TeacherLogout from './Teacher/TeacherLogout';
+import AllChapters from './Teacher/AllChapters';
+import AddChapter from './Teacher/AddChapter';
+import EditChapter from './Teacher/EditChapter';
+import EditCourse from './Teacher/EditCourse';
+import MyStudents from './Teacher/MyStudents';
+import StudentLogout from './User/studentLogout';
+import EnrolledStudents from './Teacher/EnrolledStudents';
+import DashboardCard from './Teacher/DashboardCard';
+import RecommendedCourses from './User/ReacommendedCourses';
+import AddAssignment from './Teacher/AddAssignment';
+import ShowAssignment from './Teacher/ShowAssignment';
+import UserAssignments from './User/UserAssignments';
+import AddQuiz from './Teacher/AddQuiz';
+import AllQuizes from './Teacher/Quiz';
+import EditQuiz from './Teacher/EditQuiz';
+import AddQuizQuestions from './Teacher/AddQuizQuestions';
+import QuizQuestions from './Teacher/QuizQuestions';
+import AssignQuiz from './Teacher/assignQuiz';
+import CourseQuiz from './User/CourseQuizList';
+import TakeQuiz from './User/takeQuiz';
+import Search from './Search';
+import StudyMaterials from './Teacher/StudyMaterial';
+import AddStudyMaterials from './Teacher/AddStudyMaterials';
+import UserStudyMaterials from './User/StudyMaterials';
+import AttemptedStudents from './Teacher/AttemtedStudents';
+import FAQs from './FAQs';
+import Verify from './Teacher/verifyEmail';
+// attempted-students/
 function Main() {
   return (
     <div>
@@ -32,6 +61,22 @@ function Main() {
       {/* <Setting /> */}
       <Routes>
         <Route path="/user-dashboard" element={<UserDashboard />} />
+        <Route
+          path="/study-materials/:course_id"
+          element={<StudyMaterials />}
+        />
+        <Route
+          path="/add-study-material/:course_id"
+          element={<AddStudyMaterials />}
+        />
+        <Route
+          path="/user-study-materials/:course_id"
+          element={<UserStudyMaterials />}
+        />
+        <Route
+          path="/attempted-students/:quizId"
+          element={<AttemptedStudents />}
+        />
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/detail/:course_id" element={<CourseDetails />} />
@@ -52,11 +97,45 @@ function Main() {
         <Route path="/popular-teachers" element={<PopularTeachers />} />
         <Route path="/category/:course_name" element={<CategoryCourses />} />
         <Route path="/teacher-logout" element={<TeacherLogout />} />
+        <Route path="/user-logout" element={<StudentLogout />} />
+        <Route path="/add-quiz" element={<AddQuiz />} />
+        <Route path="/quiz" element={<AllQuizes />} />
+        <Route path="/add-course" element={<AddCourse />} />
+        <Route path="/add-chapter/:course_id" element={<AddChapter />} />
+        <Route path="/assign-quiz/:course_id" element={<AssignQuiz />} />
+        <Route path="/all-chapters/:course_id" element={<AllChapters />} />
+        <Route path="/edit-chapter/:chapter_id" element={<EditChapter />} />
+        <Route path="/edit-course/:course_id" element={<EditCourse />} />
+        <Route path="/edit-quiz/:quizId" element={<EditQuiz />} />
+        <Route path="/add-question/:quizId" element={<AddQuizQuestions />} />
+        <Route path="/my-students/:teacher_id" element={<MyStudents />} />
+        <Route path="/dashboard-cards" element={<DashboardCard />} />
+        <Route path="/recommended-courses" element={<RecommendedCourses />} />
+        <Route path="/user-assignments/" element={<UserAssignments />} />
+        <Route path="/quiz-questions/:quizId" element={<QuizQuestions />} />
+        <Route path="/course-quiz/:course_id" element={<CourseQuiz />} />
+        <Route path="/take-quiz/:quiz_id" element={<TakeQuiz />} />
+        <Route path="/FAQs" element={<FAQs />} />
 
+        <Route path="/verify-teacher/:teacher_id" element={<Verify />} />
+
+        <Route
+          path="/assignments/:teacher_id/:student_id"
+          element={<ShowAssignment />}
+        />
+        <Route
+          path="/add-assignment/:teacher_id/:student_id"
+          element={<AddAssignment />}
+        />
+        <Route
+          path="/enrolled-students/:course_id"
+          element={<EnrolledStudents />}
+        />
         <Route
           path="/teacher-change-password"
           element={<TeacherChangePassword />}
         />
+        <Route path="/search-courses/:searchString" element={<Search />} />
       </Routes>
       <Footer />
     </div>

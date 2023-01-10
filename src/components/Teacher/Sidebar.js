@@ -2,10 +2,13 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 
 function Sidebar() {
+  const teacherId = localStorage.getItem('teacherId');
+
   return (
     <div className="card">
-      <h5 className="card-header">Dashboard</h5>
-
+      <Link to={'/dashboard-cards'} className="text-decoration-none">
+        <h5 className="card-header text-secondary">Dashboard</h5>
+      </Link>
       <div className="list-group list-group-flush">
         <Link
           to="/teacher-mycourses"
@@ -13,24 +16,28 @@ function Sidebar() {
         >
           My Courses
         </Link>
+        <Link to={'/quiz/'} className="list-group-item list-group-item-action">
+          Quiz
+        </Link>
         <Link
-          to="/teacher-users"
+          to={'/add-quiz/'}
+          className="list-group-item list-group-item-action"
+        >
+          Add Quiz
+        </Link>
+        <Link
+          to={'/my-students/' + teacherId}
           className="list-group-item list-group-item-action"
         >
           My Users
         </Link>
         <Link
-          to="/add-course"
+          to={'/add-course'}
           className="list-group-item list-group-item-action"
         >
           Add Course
-        </Link>{' '}
-        <Link to="/favorite" className="list-group-item list-group-item-action">
-          Favorite Courses
         </Link>
-        <Link to="/" className="list-group-item list-group-item-action">
-          Recommended Courses for you
-        </Link>
+
         <Link
           to="/teacher-setting"
           className="list-group-item list-group-item-action"
